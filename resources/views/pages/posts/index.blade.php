@@ -1,6 +1,11 @@
 {{-- resources/views/pages/posts/index.blade.php --}}
 
 <x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('My Posts') }}
+        </h2>
+    </x-slot>
     <div class="flex-1 max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="md:py-8">
             @if(session('success'))
@@ -9,15 +14,21 @@
             </div>
             @endif
             <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-xl font-bold">{{ __('Posts') }}</h1>
-                </div>
-
                 <!-- Add Post Form -->
                 <div class="bg-white dark:bg-slate-800 shadow-md rounded border border-slate-200 dark:border-slate-700 p-5">
                     <h2 class="text-lg font-bold mb-4">{{ __('Create new Post') }}</h2>
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-5">
+                            <ul class="flex flex-wrap -m-1">
+                                @foreach ($categories as $category)
+                                <li class="m-1">
+                                    <button type="button" data-category-id="{{ $category->id }}" class="category-btn inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-indigo-300 text-white duration-150 ease-in-out">{{ $category->name }}</button>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <input type="hidden" name="categories" id="selected-categories" value="">
                         <div class="mb-4">
                             <label for="title-input" class="sr-only">{{ __('Title') }}</label>
                             <input id="title-input" class="form-input w-full bg-slate-100 dark:bg-slate-900 border-transparent dark:border-transparent focus:bg-white dark:focus:bg-slate-800 placeholder-slate-500" type="text" name="title" placeholder="Your post title..." value="{{ old('title') }}">
@@ -79,6 +90,29 @@
 
                 reader.readAsDataURL(event.target.files[0]);
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            let selectedCategories = [];
+
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const categoryId = this.dataset.categoryId;
+                    const isSelected = selectedCategories.includes(categoryId);
+
+                    if (isSelected) {
+                        selectedCategories = selectedCategories.filter(id => id !== categoryId);
+                        this.classList.replace('bg-indigo-700', 'bg-indigo-300');
+                    } else {
+                        selectedCategories.push(categoryId);
+                        this.classList.replace('bg-indigo-300', 'bg-indigo-700');
+                    }
+
+                    document.getElementById('selected-categories').value = selectedCategories.join(',');
+                });
+            });
         });
     </script>
 </x-app-layout>

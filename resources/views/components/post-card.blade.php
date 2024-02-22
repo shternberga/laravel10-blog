@@ -36,8 +36,14 @@
             </div>
         </div>
     </header>
+    <!-- Category Badges -->
+    <div class="mb-3">
+        @foreach ($post->categories as $category)
+        <span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-semibold leading-none text-white bg-indigo-500 rounded-full">{{ $category->name }}</span>
+        @endforeach
+    </div>
+    <!-- Post Body -->
     <a href="{{ route('posts.show', $post->id) }}" class="block hover:bg-gray-50 transition-colors duration-200 rounded-lg">
-
         <div class="text-sm text-slate-800 dark:text-slate-100 space-y-2 mb-5">
             <p class="text-gray-600">{{ $post->body }}</p>
             @if($post->media)

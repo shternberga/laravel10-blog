@@ -1,24 +1,33 @@
 {{-- resources/views/pages/posts/index.blade.php --}}
 
 <x-app-layout>
-
+    <x-slot name="header">
+        <a class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600" href="{{ route('posts.index') }}">
+            <svg class="fill-current text-white mr-2" width="7" height="12" viewBox="0 0 7 12">
+                <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
+            </svg>
+            <span>{{ __('Back To Posts') }}</span>
+        </a>
+    </x-slot>
     <div class="flex-1 max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="md:py-8">
             <div class="space-y-4 ">
-                <div class="flex justify-between items-center">
-                    <a class="inline-flex items-center px-2 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600" href="{{ route('posts.index') }}">
-                        <svg class="fill-current text-white mr-2" width="7" height="12" viewBox="0 0 7 12">
-                            <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
-                        </svg>
-                        <span>Back To Posts</span>
-                    </a>
-                </div>
-                <!-- Add Post Form -->
+                <!-- Edit Post Form -->
                 <div class="bg-white dark:bg-slate-800 shadow-md rounded border border-slate-200 dark:border-slate-700 p-5">
                     <h2 class="text-lg font-bold mb-4">Edit the Post</h2>
                     <form method="POST" action="{{ route('posts.update', $post) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+                        <div class="mb-5">
+                            <ul class="flex flex-wrap -m-1">
+                                @foreach ($categories as $category)
+                                <li class="m-1">
+                                    <button type="button" data-category-id="{{ $category->id }}" class="category-btn inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm {{ $post->categories->contains($category->id) ? 'bg-indigo-700' : 'bg-indigo-300' }} text-white duration-150 ease-in-out">{{ $category->name }}</button>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <input type="hidden" name="categories" id="selected-categories" value="">
                         <div class="mb-4">
                             <input id="title-input" class="form-input w-full bg-slate-100 dark:bg-slate-900 border-transparent dark:border-transparent focus:bg-white dark:focus:bg-slate-800 placeholder-slate-500" type="text" name="title" placeholder="Your post title..." value="{{ old('title', $post->title) }}">
                             @error('title')
@@ -87,4 +96,28 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            let selectedCategories = [];
+
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const categoryId = this.dataset.categoryId;
+                    const isSelected = selectedCategories.includes(categoryId);
+
+                    if (isSelected) {
+                        selectedCategories = selectedCategories.filter(id => id !== categoryId);
+                        this.classList.replace('bg-indigo-700', 'bg-indigo-300');
+                    } else {
+                        selectedCategories.push(categoryId);
+                        this.classList.replace('bg-indigo-300', 'bg-indigo-700');
+                    }
+
+                    document.getElementById('selected-categories').value = selectedCategories.join(',');
+                });
+            });
+        });
+    </script>
+
 </x-app-layout>

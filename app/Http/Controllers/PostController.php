@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,9 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where('user_id', auth()->id())->get();
-        return view('pages.posts.index', compact('posts'));
+        $posts = Post::where('user_id', auth()->id())->latest()->get();
+        $categories = Category::all();
+        return view('pages.posts.index', compact('posts', 'categories'));
     }
 
     public function create()
@@ -29,6 +31,7 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'body' => 'required',
             'media' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'categories' => 'nullable|string',
         ]);
 
         if ($request->hasFile('media')) {
@@ -37,7 +40,12 @@ class PostController extends Controller
             $validatedData['media'] = $path;
         }
 
-        Post::create($validatedData + ['user_id' => auth()->id()]);
+        $post = Post::create($validatedData + ['user_id' => auth()->id()]);
+
+        if ($request->has('categories')) {
+            $categoryIds = explode(',', $request->categories);
+            $post->categories()->sync($categoryIds);
+        }
 
         session()->flash('success', 'Post created successfully.');
 
@@ -55,7 +63,8 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
-        return view('pages.posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('pages.posts.edit', compact('post', 'categories'));
     }
 
     public function update(Request $request, Post $post)
@@ -66,6 +75,7 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'body' => 'required',
             'media' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'categories' => 'nullable|string',
         ]);
 
         if ($request->hasFile('media')) {
@@ -73,7 +83,10 @@ class PostController extends Controller
             $path = $file->store('public/media');
             $validatedData['media'] = $path;
         }
-
+        if ($request->has('categories')) {
+            $categoryIds = explode(',', $request->categories);
+            $post->categories()->sync($categoryIds);
+        }
         $post->update($validatedData);
 
         session()->flash('success', 'Post updated successfully.');
