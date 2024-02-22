@@ -28,7 +28,7 @@
                             <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3">Remove</button>
+                                <button type="submit" class="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3">{{ __('Remove') }}</button>
                             </form>
                         </li>
                     </ul>
@@ -54,7 +54,7 @@
                     <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
                 </svg>
 
-                <div class="text-sm text-slate-500 dark:text-slate-400">Edit</div>
+                <div class="text-sm text-slate-500 dark:text-slate-400">{{ __('Edit') }}</div>
             </button>
         </a>
         <!-- Comments button -->

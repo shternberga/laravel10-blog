@@ -9,7 +9,7 @@
                         <svg class="fill-current text-white mr-2" width="7" height="12" viewBox="0 0 7 12">
                             <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
                         </svg>
-                        <span>Back To Posts</span>
+                        <span>{{ __('Back To Posts') }}</span>
                     </a>
                 </div>
                 <x-post-card :post="$post" />
