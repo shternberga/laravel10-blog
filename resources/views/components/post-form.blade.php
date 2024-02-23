@@ -22,7 +22,7 @@
         </div>
         <div class="mb-4">
             <label for="body-input" class="sr-only">Body</label>
-            <textarea id="body-input" class="form-input w-full bg-slate-100 border-transparent focus:bg-white placeholder-slate-500" name="body" placeholder="Your new post content...">{{ old('body', $post->body ?? 'Your new post content') }}</textarea>
+            <textarea id="body-input" class="form-input w-full bg-slate-100 border-transparent focus:bg-white placeholder-slate-500" name="body" placeholder="Your new post content...">{{ old('body', $post->body ?? 'Your new post content...') }}</textarea>
             @error('body')
             <div>{{ $message }}</div>
             @enderror
