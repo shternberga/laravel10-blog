@@ -16,6 +16,7 @@
         }
     </style>
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- AlpineJS -->
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <!-- Font Awesome -->
@@ -60,6 +61,7 @@
         </div>
         <div :class="open ? 'block': 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
             <div class="w-full container mx-auto flex flex-col sm:flex-row items-center justify-center text-sm font-bold uppercase mt-0 px-6 py-2">
+                <a href="{{ route('welcome') }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">ALL</a>
                 @foreach ($categories as $category)
                 <!-- Display each category -->
                 <a href="{{ route('welcome', ['category' => $category->id]) }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">{{ $category->name }}</a>
@@ -68,37 +70,8 @@
         </div>
     </nav>
 
-
     <div class="container mx-auto flex flex-wrap py-6 justify-center">
-
-        <!-- Posts Section -->
-        <section class="w-2/3 flex flex-col items-center px-3">
-
-            @foreach ($posts as $post)
-            <article class="flex flex-col shadow my-4">
-                <!-- Article Image -->
-                <a href="{{ route('posts.show', $post->id) }}" class="hover:opacity-75">
-
-                    <img src="{{ $post->media ? Storage::url($post->media) : Storage::url('public/media/noimage.webp') }}" width="590" height="332" class="object-cover"> </a>
-                <div class="bg-white flex flex-col justify-start p-6">
-                    <a href="{{ route('posts.show', $post->id) }}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ $post->title }}</a>
-                    <p href="#" class="text-sm pb-3">
-                        By <a href="#" class="font-semibold hover:text-gray-800">{{ $post->user->name }}</a>, Published on {{ $post->created_at->format('F j, Y') }}
-                    </p>
-                    <a href="{{ route('posts.show', $post->id) }}" class="pb-6">{{ Str::limit($post->body, 250) }}</a>
-                    <a href="{{ route('posts.show', $post->id) }}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-            @endforeach
-
-
-            <!-- Pagination -->
-            <div class="flex items-center py-8">
-                {{ $posts->appends(request()->query())->links() }}
-            </div>
-
-        </section>
-
+        @yield('content')
     </div>
 
     <footer class="w-full border-t bg-white pb-12">

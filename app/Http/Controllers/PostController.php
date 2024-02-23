@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,10 @@ class PostController extends Controller
 
         if ($request->has('categories')) {
             $categoryIds = explode(',', $request->categories);
-            $post->categories()->sync($categoryIds);
+            $categoryIds = array_filter($categoryIds);
+
+            if (!empty($categoryIds))
+                $post->categories()->sync($categoryIds);
         }
 
         session()->flash('success', 'Post created successfully.');
@@ -85,7 +89,11 @@ class PostController extends Controller
         }
         if ($request->has('categories')) {
             $categoryIds = explode(',', $request->categories);
-            $post->categories()->sync($categoryIds);
+            if (empty($categoryIds)) {
+                $post->categories()->detach();
+            } else {
+                $post->categories()->sync($categoryIds);
+            }
         }
         $post->update($validatedData);
 
@@ -103,5 +111,22 @@ class PostController extends Controller
         session()->flash('success', 'Post deleted successfully.');
 
         return redirect()->route('posts.index');
+    }
+
+
+    public function addComment(Request $request, $id)
+    {
+        $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $comment = new Comment();
+        $comment->body = $request->body;
+        $comment->post_id = $id;
+        // Assuming you have user authentication
+        $comment->user_id = auth()->id();
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Comment added successfully.');
     }
 }

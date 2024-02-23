@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\Category;
-use App\Models\Post;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,30 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $categories = Category::all();
-    $category_id = Request::get('category');
+Route::get('/', [BlogController::class, 'index'])->name('welcome');
+Route::get('/blog/posts/{id}', [BlogController::class, 'show'])->name('blog.posts.show');
 
-    $query = Post::latest();
-
-    if ($category_id) {
-        $query->whereHas('categories', function ($q) use ($category_id) {
-            $q->where('categories.id', $category_id);
-        });
-    }
-
-    $posts = $query->paginate(3)->appends(request()->query());
-
-    return view('welcome', [
-        'categories' => $categories,
-        'posts' => $posts
-    ]);
-})->name('welcome');
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -50,5 +29,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('posts', PostController::class);
+Route::post('/posts/{id}/comments', [PostController::class, 'addComment'])->name('posts.comments.store');
 
 require __DIR__ . '/auth.php';

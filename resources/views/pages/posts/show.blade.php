@@ -17,6 +17,7 @@
         </div>
     </div>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var output = document.getElementById('media-preview');

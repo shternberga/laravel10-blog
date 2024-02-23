@@ -71,4 +71,6 @@
             <div class="text-sm text-slate-500 dark:text-slate-400">{{ $post->comments->count() }}</div>
         </button>
     </footer>
+
+    <x-comments-section :post="$post" />
 </div>

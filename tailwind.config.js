@@ -4,11 +4,13 @@ import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    mode: 'jit', 
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './resources/views/pages/**/*.blade.php',
         './resources/js/**/*.js',
     ],
 
@@ -50,6 +52,9 @@ export default {
             },
             zIndex: {
               60: '60',
+            },
+            content: {
+              'dot': "'·'",
             },
         },
     },
