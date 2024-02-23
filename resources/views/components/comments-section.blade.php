@@ -24,7 +24,7 @@
 @endauth
 @if ($post->comments->count())
 <div class="p-6">
-    <h3 class="font-semibold text-slate-800 dark:text-slate-100 mb-4">Comments</h3>
+    <h3 class="font-semibold text-slate-800 mb-4">Comments</h3>
     <ul class="space-y-5">
         @foreach($post->comments as $comment)
         <!-- Comment -->
@@ -34,18 +34,18 @@
                 <!-- Comment content -->
                 <div>
                     <!-- Comment text -->
-                    <div class="grow text-sm text-slate-800 dark:text-slate-100 space-y-2 mb-2">
+                    <div class="grow text-sm text-slate-800 space-y-2 mb-2">
                         <p>{{ $comment->body }}</p>
                     </div>
                     <!-- Comment footer -->
                     <div class="flex flex-wrap text-xs">
-                        <div class="flex items-center after:block after:content-['·'] last:after:content-[''] after:text-sm after:text-slate-400 dark:after:text-slate-600 after:px-2">
+                        <div class="flex items-center after:block after:content-['·'] last:after:content-[''] after:text-sm after:text-slate-400 after:text-slate-600 after:px-2">
                             <a class="block mr-2" href="#0">
                                 <i class="fas fa-user rounded-full" style="font-size: 12px;"></i> </a>
-                            <a class="font-medium text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400" href="#0">{{ $comment->user->name }}</a>
+                            <a class="font-medium text-indigo-500 hover:text-indigo-600" href="#0">{{ $comment->user->name }}</a>
                         </div>
                         @if(Auth::check() && Auth::user()->id == $comment->user_id)
-                        <div class="flex items-center after:block after:content-['·'] last:after:content-[''] after:text-sm after:text-slate-400 dark:after:text-slate-600 after:px-2">
+                        <div class="flex items-center after:block after:content-['·'] last:after:content-[''] after:text-sm after:text-slate-400 after:px-2">
                             <a class="font-medium text-slate-500 hover:text-slate-600" href="#0" onclick="editComment({{ $comment->id }})">Edit</a>
                         </div>
                         @endif

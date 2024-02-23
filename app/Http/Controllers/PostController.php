@@ -123,7 +123,6 @@ class PostController extends Controller
         $comment = new Comment();
         $comment->body = $request->body;
         $comment->post_id = $id;
-        // Assuming you have user authentication
         $comment->user_id = auth()->id();
         $comment->save();
 

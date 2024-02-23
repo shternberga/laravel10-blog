@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BlogController::class, 'index'])->name('welcome');
 Route::get('/blog/posts/{id}', [BlogController::class, 'show'])->name('blog.posts.show');
+Route::get('/blog/posts/search', [BlogController::class, 'search'])->name('blog.posts.search');
 
 Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 
